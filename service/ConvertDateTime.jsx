@@ -43,3 +43,17 @@ export const GetDateRangeToDisplay = () =>{
     }
     return dateList;
 }
+
+export const GetPrevDateRangeToDisplay = () =>{
+    const dates = [];
+    for(let i=0;i<=7;i++){
+        const date = moment().subtract(i,'days');
+
+        dates.push({
+            date: date.format('DD'),
+            day: date.format('dd'),
+            formattedDate: date.format('L')
+        })
+    }
+    return dates;
+}
