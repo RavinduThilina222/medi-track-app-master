@@ -1,9 +1,26 @@
 import { View, Text,Image, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Colors from '../constants/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-const MedicationCardItem = ({medicine}) => {
+const MedicationCardItem = ({medicine,selectedDate = ''}) => {
+
+  const [status,setStatus] = useState();
+
+  const checkStatus = () => {
+    if (Array.isArray(medicine?.action)) {
+      const data = medicine.action.find((item) => item.date === selectedDate);
+      console.log("--", data);
+      setStatus(data);
+    } else {
+      console.warn("medicine.action is not an array or is undefined");
+      setStatus(undefined); // Reset status if action is invalid
+    }
+  };
+
+  useEffect(()=>{
+    checkStatus();
+  },[medicine])
   return (
     <View style={styles.container}> 
       <View style={styles.subContainer}>
@@ -34,7 +51,17 @@ const MedicationCardItem = ({medicine}) => {
                 <Text style={{fontWeight:'bold',fontSize:15}}>
                     {medicine?.reminder}
                 </Text>
-            </View>
+        </View>
+
+        {status?.date && (
+          <View style={styles.statusContainer}>
+            {status?.status === 'Taken' ? (
+              <Ionicons name="checkmark-circle" size={20} color={Colors.GREEN} />
+            ) : status?.status === 'Missed' ? (
+              <Ionicons name="close-circle" size={20} color="red" />
+            ) : null}
+          </View>
+        )}
     </View>
   )
 }
@@ -67,9 +94,15 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   reminder:{
-    padding:12,
+    padding:10,
     backgroundColor:'white',
     borderRadius:15,
-    alignItems:'center'
+    alignItems:'center',
+    marginLeft:5
+  },
+  statusContainer:{
+    position:'absolute',
+    top:5,
+    padding:7
   }
 })
