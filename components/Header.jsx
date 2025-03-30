@@ -3,10 +3,12 @@ import React, { useEffect } from 'react';
 import { getLocalStorage } from '../service/Storage';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Colors from '../constants/Colors';
+import { useRouter } from 'expo-router';
 
 export default function Header() {
 
     const [user, setUser] = React.useState();
+    const router = useRouter();
 
     useEffect(() => {
         getUserDetails();
@@ -44,16 +46,18 @@ export default function Header() {
         }}
         />
         <Text style={{
-            fontSize: 22,
+            fontSize: 20,
+            marginRight:15,
             fontWeight: 'bold',
             color: 'black',
         }}>Hello {user?.displayName} 👋</Text>
-        <Ionicons name="settings-outline" size={34} color={Colors.DARK_GRAY} />
-        </View> 
-
-
-
+        <TouchableOpacity onPress={
+          ()=> router.push('/add-new-medication')
+        }>
+          <Ionicons name="medkit-outline" size={30} color={Colors.PRIMARY} />
+        </TouchableOpacity>
         
+        </View> 
         </View>
     </View>
   );
